@@ -1,0 +1,57 @@
+The named_delivery_methods gem was created in order to make it possible to use
+two different SMTP configurations in the same Rails application. 
+The solution is to allow named delivery methods.
+
+== Environment configuration
+
+Here is an example using two named SMTP methods, and one sendmail method:
+
+  config.action_mailer.delivery_method = :named
+  config.action_mailer.named_settings = {
+      :primary => {:method => :smtp, :settings => { ... }}
+      :secondary => {:method => :smpt, :settings => { ... }},
+      :sm => {:method => :sendmail, :settings => { ... }}
+    }
+
+== Mailer configuration
+
+Note! You will have to set a default delivery method for all your mailers!
+
+  class MyMailer < ActionMailer::Base
+    default :delivery_method => :primary # Default delivery method for all emails
+    
+    def first_mail
+      # Will use :primary as delivery method
+      # ...
+    end
+    
+    def second_mail
+      mail(:delivery_method => :secondary) # This mail will use the secondary delivery method
+    end
+  end
+
+== Things to consider
+
+* You have to specify a default delivery method for each mailer
+* If you use named delivery methods for one environment, you have to use it in all.
+* named_delivery_methods only supports the delivery methods recognized by the Mail gem.
+* You can not used any of the predefined names: :smtp, :sendmail, :file and :test.
+
+As an example, using the previous example, one would place this configuration in environments/test.rb:
+
+  config.action_mailer.delivery_method = :named
+  config.action_mailer.named_settings = {
+      :primary => {:method => :test}
+      :secondary => {:method => :test},
+      :sm => {:method => :test}
+    }
+
+== Download and installation
+
+Add this line to your Gemfile:
+  
+  gem 'named_delivery_methods', '0.9', :git => 'git://github.com/danabr/named_delivery_methods.git'
+  
+== License
+
+named_delivery_methods is released under the MIT license.
