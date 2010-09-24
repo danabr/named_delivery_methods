@@ -1,3 +1,5 @@
+= named_delivery_methods
+
 The named_delivery_methods gem was created in order to make it possible to use
 two different SMTP configurations in the same Rails application. 
 The solution is to allow named delivery methods.
@@ -9,7 +11,7 @@ Here is an example using two named SMTP methods, and one sendmail method:
   config.action_mailer.delivery_method = :named
   config.action_mailer.named_settings = {
       :primary => {:method => :smtp, :settings => { ... }}
-      :secondary => {:method => :smpt, :settings => { ... }},
+      :secondary => {:method => :smtp, :settings => { ... }},
       :sm => {:method => :sendmail, :settings => { ... }}
     }
 
