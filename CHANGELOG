@@ -1,0 +1,2 @@
+0.9.1
+ * Default delivery method can now be set through config.action_mailer.delivery_method

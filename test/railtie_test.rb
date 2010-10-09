@@ -5,17 +5,10 @@ require 'named_delivery_methods'
 
 class RailtieTest < Test::Unit::TestCase
 
-  def test_does_nothing_if_delivery_method_is_not_named
-    # Setting named_settings to nil will result in a crash if processing is allowed to go on
-    app = make_app :delivery_method => :test, :named_settings => nil
-    railtie = NamedDeliveryMethods::Railtie.new
-    assert_nothing_raised { railtie.run_initializers(app) }
-  end
-  
   def test_initializer
     pre_initializer_dm_count = ActionMailer::Base.delivery_methods.size
     
-    app = make_app :delivery_method => :named, :named_settings => {
+    app = make_app :delivery_method => :primary, :named_settings => {
       :primary => {:method => :smtp, :settings => {:port => 25}},
       :secondary => {:method => :test}
       }
@@ -33,7 +26,7 @@ class RailtieTest < Test::Unit::TestCase
   end
   
   def test_method_name_must_be_given
-    app = make_app :delivery_method => :named, :named_settings =>
+    app = make_app :delivery_method => :primary, :named_settings =>
       {:primary => {:settings => {:port => 25}}}
     
     assert_raise(NamedDeliveryMethods::ConfigurationError) do
